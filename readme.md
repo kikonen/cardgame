@@ -15,3 +15,10 @@ Simple experiment of few web technologies
 - REST
 - HTML5 DnD
 - Modular web application design
+
+
+Demo:
+
+http://kari.dy.fi/cardgame/
+
+(sorry: not quaranteed to be running all the time)
