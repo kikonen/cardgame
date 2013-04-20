@@ -22,7 +22,8 @@ $topSpace: 0px;
 $playSpace: 0px;
 
 #board {
-    border: 1px black;
+    @include round-border(10px, 1px, solid, black);
+
     background: lightblue;
     padding: $boardPadding;
     position: relative;
@@ -32,7 +33,8 @@ $playSpace: 0px;
 }
 
 .deck {
-    border: $deckBorder solid red;
+    @include round-border(10px, $deckBorder, solid, red);
+
     position: absolute;
     padding: $deckPadding;
     width: $deckWidth;

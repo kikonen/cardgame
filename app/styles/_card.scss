@@ -17,7 +17,8 @@ $cardTotalHeight: $cardHeight + $cardBorder * 2;
 @include all-card-sprites;
 
 .card {
-    border: $cardBorder solid gray;
+    @include round-border(4px, $cardBorder, solid, gray);
+    
     position: absolute;
     left: $cardLeft;
     top: $cardTop;
@@ -26,7 +27,11 @@ $cardTotalHeight: $cardHeight + $cardBorder * 2;
 }
 
 .card-hover {
-    border: 1px dotted blue;
+    @include round-border(4px, $cardBorder, dashed, blue);
+}
+
+.card-dragged {
+    opacity: 0.4;
 }
 
 .hidden {

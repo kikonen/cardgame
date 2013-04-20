@@ -4,6 +4,8 @@ var express = require('express'),
 
 var app = express();
 
+var rootURL = "";
+
 app.configure(function() {
   app.use(express.bodyParser());
   app.use(express.static(path.join(__dirname, '.')));
@@ -67,11 +69,11 @@ var deck = createDeck();
 var cards = createCards(deck);
 
 
-app.get('/', function(req, res) {
+app.get(rootURL + '/', function(req, res) {
   res.render('index.jade');
 });
 
-app.get('/cards', function(req, res) {
+app.get(rootURL + '/cards', function(req, res) {
   var result = [];
   for (card in deck) {
     if (deck.hasOwnProperty(card)) {
@@ -82,7 +84,7 @@ app.get('/cards', function(req, res) {
   res.json(result);
 });
 
-app.get('/shuffledcards', function(req, res) {
+var getShuffledCards = function(req, res) {
   var result = [];
   
   for (card in deck) {
@@ -94,6 +96,14 @@ app.get('/shuffledcards', function(req, res) {
   shuffle(result);
   
   res.json(result);
+};
+
+app.get(rootURL + '/shuffledcards', getShuffledCards);
+app.get(rootURL + '//shuffledcards', getShuffledCards);
+
+// Log unknown requests
+app.get('*', function(req, res) {
+  console.log(req.params);
 });
 
 function shuffle(cards) {
@@ -115,4 +125,4 @@ app.get('/cards/:id', function(req, res) {
   res.json(card);
 });
 
-app.listen(8080);
+app.listen(8090);

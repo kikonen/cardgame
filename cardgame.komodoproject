@@ -55,7 +55,8 @@
   <string id="import_exclude_matches">*.*~;*.bak;*.tmp;CVS;.#*;*.pyo;*.pyc;.svn;_svn;.git;.hg;.bzr;*%25*;tmp*.html;.DS_Store;*.swp;*.kpf;*.komodoproject;.komodotools;__pycache__</string>
   <string id="import_include_matches"></string>
   <boolean id="indentStringsAfterParens">0</boolean>
-  <long id="indentWidth">4</long>
+  <long id="indentWidth">2</long>
+  <string id="javascriptExtraPaths"></string>
   <string id="jshintOptions"></string>
   <string id="jshint_linter_chooser">default</string>
   <string id="jshint_linter_specific"></string>

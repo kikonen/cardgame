@@ -323,13 +323,15 @@ function(
             "text/x-card",
             JSON.stringify(data));
         
-        $(event.target).addClass("hidden");
+        // NOTE KI hidden caused DnD to not work with chrome
+        $(event.target).addClass("card-dragged");
       }
     },
 
     onDragEnd: function (event) {
       // TODO KI anything?
-      $(event.target).removeClass("hidden");
+        // NOTE KI hidden caused DnD to not work with chrome
+      $(event.target).removeClass("card-dragged");
     },
   
     onDragDrop: function(event){

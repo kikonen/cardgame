@@ -9,6 +9,14 @@
   @return $number / ($number * 0 + 1);
 }
 
+@mixin round-border($radius, $width, $style, $color) {
+    border: $width $style, $color;
+    -webkit-border-radius: $radius;
+    -ms-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+}
+
 @import "header";
 @import "footer";
 @import "game";
