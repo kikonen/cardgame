@@ -1,0 +1,10 @@
+.deck {
+    border: 2px solid red;
+    position: absolute;
+    margin: 5px;
+    left: 0;
+    right: 0;
+    width: $cardWidth;
+    height: $cardHeight;
+    z-index: 100;
+}

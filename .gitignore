@@ -1,0 +1,11 @@
+.sass-cache/*
+node_modules/*
+*.bak
+*~
+~*
+#*
+*#
+app/debug_css/*
+dist/*
+images/card-*.png
+images/back-*.png

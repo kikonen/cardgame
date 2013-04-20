@@ -1,0 +1,66 @@
+$cardFronts: sprite-map("card/*.png");
+$cardBacks: sprite-map("back/*.png");
+
+$cardFronts-sprite-layout: horizontal;
+$cardBacks-sprite-layout: horizontal;
+
+$cardLeft: 5px;
+$cardTop: 5px;
+$cardBorder: 1px;
+$cardWidth: 72px;
+$cardHeight: 96px;
+
+$cardTotalWidth: $cardWidth + $cardBorder * 2;
+$cardTotalHeight: $cardHeight + $cardBorder * 2;
+
+@import "card/*.png";
+@include all-card-sprites;
+
+.card {
+    border: $cardBorder solid gray;
+    position: absolute;
+    left: $cardLeft;
+    top: $cardTop;
+    width: $cardWidth;
+    height: $cardHeight;
+}
+
+.card-hover {
+    border: 1px dotted blue;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.cardfront {
+    background-image: sprite-url($cardFronts);
+}
+
+.cardback {
+    background-image: sprite-url($cardBacks);
+}
+
+.reddeck {
+    background-position: sprite-position($cardBacks, "b2fv");
+}
+
+.bluedeck {
+    background-position: sprite-position($cardBacks, "b1fv");
+}
+
+.spade {
+    color: black;
+}
+
+.heart {
+    color: red;
+}
+
+.diamond {
+    color: red;
+}
+
+.club {
+    color: black;
+}

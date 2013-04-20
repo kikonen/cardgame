@@ -1,0 +1,17 @@
+/*-- HTML5 Boilerplate. -----------------------------------------------------*/
+
+@import "../../vendor/h5bp/css/normalize.css";
+@import "../../vendor/h5bp/css/main.css";
+
+/*-- Application stylesheets. -----------------------------------------------*/
+
+@function strip-unit($number) {
+  @return $number / ($number * 0 + 1);
+}
+
+@import "header";
+@import "footer";
+@import "game";
+@import "card";
+@import "board";
+@import "player";

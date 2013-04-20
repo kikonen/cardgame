@@ -1,0 +1,92 @@
+$columns: 7;
+$cards: 7;
+
+$cardHOverlap : round($cardTotalWidth / 5);
+$cardVOverlap : round($cardTotalHeight / 5);
+
+$deckBorder: 2px;
+$deckWidth: $cardTotalWidth + $deckBorder * 2;
+$deckHeight: $cardTotalHeight + $deckBorder * 2;
+
+$deckSpace: round($deckWidth / 5);
+
+$fullCardStackHeight: $cardTotalHeight + $cardHOverlap * $cards;
+$boardWidth: $deckWidth * $columns + $deckSpace * ($columns + 1);
+$boardHeight: $deckHeight * 2 + $deckSpace * 2 + $deckSpace * 2 + $fullCardStackHeight;
+
+$boardPadding: 5px;
+$deckPadding: 5px;
+$deckLeft: 10px;
+$deckTop: 10px;
+$topSpace: 0px;
+$playSpace: 0px;
+
+#board {
+    border: 1px black;
+    background: lightblue;
+    padding: $boardPadding;
+    position: relative;
+    left: 10px;
+    width: $boardWidth;
+    height: $boardHeight;
+}
+
+.deck {
+    border: $deckBorder solid red;
+    position: absolute;
+    padding: $deckPadding;
+    width: $deckWidth;
+    height: $deckHeight;
+    z-index: 100;
+}
+
+.deck-top-row {
+    top: $deckTop;
+}
+
+.deck-play-row {
+    top: ($deckTop + $deckHeight + $deckSpace * 2);
+}
+
+.empty-deck {
+    background: green;
+}
+
+.main-deck {
+    left: $deckLeft;
+}
+
+.open-deck {
+    left: ($deckLeft + ($deckSpace + $deckWidth) * 1);
+}
+
+.top-deck {
+/*    background: blue;*/
+}
+
+.play-deck {
+/*    background: yellow;*/
+}
+
+/*
+ *.top-deck-3 {
+  left: 1094 * 6px;
+}
+
+.play-deck-0 {
+  left: 1094px * 0px;
+}
+*/
+
+@for $i from 0 through 3 {
+    .top-deck-#{$i} {
+        left: $deckLeft + $topSpace + ($deckSpace + $deckWidth) * ($i + 3);
+    }
+}
+
+@for $i from 0 through 6 {
+    .play-deck-#{$i} {
+        left: $deckLeft + $playSpace + ($deckSpace + $deckWidth) * $i;
+    }
+}
+
