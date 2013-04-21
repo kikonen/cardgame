@@ -29,6 +29,11 @@
 
   <!-- Application source. -->
 
+<script >
+var ua = navigator.userAgent
+window.IE= ua.match(/(msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+</script>
+
   <!--(if target dummy)><!-->
   <script data-main="app/config" src="vendor/js/libs/require.js"></script>
   <!--<!(endif)-->

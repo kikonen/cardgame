@@ -17,6 +17,12 @@ function(
   Board.MAIN_DECK_ID = 1;
   Board.OPEN_DECK_ID = 2;
   
+  if (window.IE) {
+    Board.TRANSFER_TYPE = "Text";
+  } else {
+    Board.TRANSFER_TYPE = "text/x-card";
+  }
+  
   /**
    * Main deck of cards
    */
@@ -318,9 +324,9 @@ function(
         var data = {
             deckId: deck.get("id"),
             cardIds: cardIds};
-            
+
         event.originalEvent.dataTransfer.setData(
-            "text/x-card",
+            Board.TRANSFER_TYPE,
             JSON.stringify(data));
         
         // NOTE KI hidden caused DnD to not work with chrome
@@ -335,7 +341,7 @@ function(
     },
   
     onDragDrop: function(event){
-      var data = JSON.parse(event.originalEvent.dataTransfer.getData("text/x-card"));
+      var data = JSON.parse( event.originalEvent.dataTransfer.getData(Board.TRANSFER_TYPE) );
 
       var sourceDeckId = data.deckId;
       
