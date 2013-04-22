@@ -6,7 +6,8 @@ define([
   "modules/footer",
   "modules/board",
   "modules/card",
-  "modules/player"
+  "modules/player",
+  "modules/debug"
 ],
 function(
   app,
@@ -14,7 +15,8 @@ function(
   Footer,
   Board,
   Card,
-  Player) {
+  Player,
+  Debug) {
 
   var Game = app.module();
 
@@ -23,15 +25,17 @@ function(
     header: null,
     board: null,
     player: null,
+    debug: null,
     
     initialize: function() {
       this.footer = new Footer.Model();
       this.header = new Header.Model();
       this.board = new Board.Model();
       this.player = new Player.Model();
+      this.debug = new Debug.Model();
       
       app.on("game:tip", function() {
-        alert("TIP: Try moving cards!");
+        alert("TIP: On touch device use touch card and then touch destination. In desktop use Drag'n'Drop");
       })
     }
   });
@@ -58,10 +62,13 @@ function(
       
       layout.setView( "#board", new Board.Views.Layout({model: game.board}) );
       layout.setView( "#player", new Player.Views.Layout({model: game.player}) );
+
+//      layout.setView( "#debug", new Debug.Views.Layout({model: game.debug}) );
       
       layout.render();
       
       app.game = game;
+      app.debug = game.debug;
       
       app.trigger("game:restart");
   }

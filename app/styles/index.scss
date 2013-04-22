@@ -10,7 +10,7 @@
 }
 
 @mixin round-border($radius, $width, $style, $color) {
-    border: $width $style, $color;
+    border: $width $style $color;
     -webkit-border-radius: $radius;
     -ms-border-radius: $radius;
     -moz-border-radius: $radius;
@@ -23,3 +23,4 @@
 @import "card";
 @import "board";
 @import "player";
+@import "debug";

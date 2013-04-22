@@ -33,8 +33,6 @@ $playSpace: 0px;
 }
 
 .deck {
-    @include round-border(10px, $deckBorder, solid, red);
-
     position: absolute;
     padding: $deckPadding;
     width: $deckWidth;
@@ -51,6 +49,7 @@ $playSpace: 0px;
 }
 
 .empty-deck {
+    @include round-border(10px, $deckBorder, solid, red);
     background: green;
 }
 

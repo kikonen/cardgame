@@ -23,6 +23,148 @@ function(
     Board.TRANSFER_TYPE = "text/x-card";
   }
   
+  Board.DESKTOP_EVENTS = {
+      "dragstart .cardfront": "onDragStart",
+      "drop .cardfront": "onDragDrop",
+      "dragover .cardfront": "onDragOver",
+      "dragenter .cardfront": "onDragEnter",
+      "dragleave .cardfront": "onDragLeave",
+      "dragend .cardfront": "onDragEnd",
+      
+      // for empty deck
+      "drop .empty-deck": "onDragDrop",
+      "dragover .empty-deck": "onDragOver",
+      "dragenter .empty-deck": "onDragEnter",
+      "dragleave .empty-deck": "onDragLeave",
+      "dragend .empty-deck": "onDragEnd",
+
+      // for
+      // - main-deck offer
+      // - open card from play deck
+      "click .cardback": "onCardClick",
+      "click .deck": "onDeckClick",
+    };
+
+  Board.MOBILE_EVENTS = {
+      "touchend .cardback": "onCardClick",
+      "touchend .deck": "onTouchEnd",
+      "touchend .cardfront": "onTouchEnd",
+      "touchend #board": "onTouchBoard",
+    
+//      "touchstart .cardfront": "onTouchStart",
+//      "touchmove": "onTouchMove",
+    };
+
+  /**
+   * Keep track of current touch-DnD state
+   */
+  Board.drag = {
+    parent: null,
+    orig: null,
+    clone: null,
+    $orig: null,
+    $clone: null,
+    offsetX: 0,
+    offsetY: 0,
+    deck: null,
+    card : null,
+
+    isEmpty: function() {
+      return this.clone == null;
+    },
+    
+    reset: function() {
+      if (this.$orig != null) {
+        this.$orig.removeClass("card-dragged");
+      }
+      if (this.parent && this.clone) {
+        this.parent.removeChild(this.clone);
+      }
+
+      this.parent = null;
+      this.orig = null;
+      this.clone = null
+      this.$orig = null;
+      this.$clone = null;
+      
+      this.offsetX = 0;
+      this.offsetY = 0;
+      
+      this.deck = null;
+      this.card = null;
+    },
+    
+    start: function(orig, x, y) {
+      this.orig = orig;
+      this.$orig = $(this.orig);
+      
+      if (false) {
+      this.parent = window.document.documentElement;//orig.parentNode;
+      this.clone = orig.cloneNode(true);
+
+      this.$clone = $(this.clone);
+      
+      this.$clone.css("z-index", 10000);
+
+      var pos = this. $orig.offset();
+      var origLeft = pos.left;
+      var origTop = pos.top;
+      this.offsetX = origLeft - x;
+      this.offsetY = origTop - y;
+      moveTo(x, y);
+      
+      this.parent.appendChild(this.clone);
+      }
+      
+      this.$orig.addClass("card-dragged");
+
+      this.card = Board.getCard(this.$orig);
+      this.deck = Board.getDeck(this.$orig);
+    },
+    
+    moveTo: function(x, y) {
+      if (this.$clone) {
+        this.$clone.css("left", (x + this.offsetX) + "px");
+        this.$clone.css("top", (y + this.offsetY) + "px");
+      }
+    }
+    };
+
+  /**
+   * @param deck can be null
+   * @return true if deck is main deck
+   */
+  Board.isMain = function(deck) {
+    return deck != null && deck.get("id") == Board.MAIN_DECK_ID;
+  }
+
+  /**
+   * @param deck can be null
+   * @return true if deck is open deck
+   */
+  Board.isOpen = function(deck) {
+    return deck != null && deck.get("id") == Board.OPEN_DECK_ID;
+  }
+  
+  /**
+   * @return card, null if no card found
+   */
+  Board.getCard = function($el) {
+      var view = $el.backboneView(Card.Views.CardFrontLayout);
+      if (view == null) {
+        view = $el.backboneView(Card.Views.CardBackLayout);
+      }
+      return view != null ? view.model : null;
+  }
+
+  /**
+   * @return deck, null if no deck found
+   */
+  Board.getDeck = function($el) {
+      var view = $el.backboneView(Deck.Views.Layout);
+      return view != null ? view.model : null;
+  }
+  
   /**
    * Main deck of cards
    */
@@ -234,6 +376,8 @@ function(
     },
     
     restart: function() {
+      Board.drag.reset();
+      
       this.mainDeck.cards.reset([]);
       this.openDeck.cards.reset([]);
       this.topDecks.each( function(deck){ deck.cards.reset([]); } );
@@ -268,27 +412,7 @@ function(
   Board.Views.Layout = Backbone.Layout.extend({
     template: "board",
     
-    events: {
-      "dragstart .cardfront": "onDragStart",
-      "drop .cardfront": "onDragDrop",
-      "dragover .cardfront": "onDragOver",
-      "dragenter .cardfront": "onDragEnter",
-      "dragleave .cardfront": "onDragLeave",
-      "dragend .cardfront": "onDragEnd",
-      
-      // for empty deck
-      "drop .empty-deck": "onDragDrop",
-      "dragover .empty-deck": "onDragOver",
-      "dragenter .empty-deck": "onDragEnter",
-      "dragleave .empty-deck": "onDragLeave",
-      "dragend .empty-deck": "onDragEnd",
-
-      // for
-      // - main-deck offer
-      // - open card from play deck
-      "click .cardback": "onCardClick",
-      "click .deck": "onDeckClick",
-    },
+    events: window.MOBILE ? Board.MOBILE_EVENTS : Board.DESKTOP_EVENTS,
     
     initialize: function() {
       app.on("game:restart", this.onRestart, this);
@@ -309,17 +433,14 @@ function(
     },
     
     onDragStart: function (event) {
-      var $el = $(event.target);
-      var cardView = $el.backboneView(Card.Views.CardFrontLayout);
-      var deckView = $el.backboneView(Deck.Views.Layout);
+      Board.drag.reset();
       
-      if (deckView != null) {
-        var deck = deckView.model;
-        
-        var cardIds = _.map(
-            deck.cardsFrom(cardView.model),
-            function(card) {
-                return card.get("id"); });
+      var $el = $(event.target);
+      var card = Board.getCard($el);
+      var deck = Board.getDeck($el);
+      
+      if (deck != null) {
+        var cardIds = deck.cardIdsFrom(card);
         
         var data = {
             deckId: deck.get("id"),
@@ -338,16 +459,21 @@ function(
       // TODO KI anything?
         // NOTE KI hidden caused DnD to not work with chrome
       $(event.target).removeClass("card-dragged");
+      Board.drag.reset();
     },
   
     onDragDrop: function(event){
+      Board.drag.reset();
+      
       var data = JSON.parse( event.originalEvent.dataTransfer.getData(Board.TRANSFER_TYPE) );
 
       var sourceDeckId = data.deckId;
       
-      var targetView = $(event.target).backboneView(Deck.Views.Layout)
-      if (targetView != null) {
-        var targetDeckId = targetView.model.get("id");
+      var $el = $(event.target);
+      var targetDeck = Board.getDeck($el);
+      
+      if (targetDeck != null) {
+        var targetDeckId = targetDeck.get("id");
   
         if (sourceDeckId !== targetDeckId) {
           app.trigger(
@@ -363,11 +489,11 @@ function(
     },
 
     onCardClick: function (event) {
+      Board.drag.reset();
+      
       var $el = $(event.target);
-      var deckView = $el.backboneView(Deck.Views.Layout);
-      if (deckView != null) {
-        var deck = deckView.model;
-        
+      var deck = Board.getDeck($el);
+      if (deck != null) {
         if (deck == this.model.mainDeck) {
           deck.offerCards(3, this.model.openDeck.get("id"), true);
         } else {
@@ -379,10 +505,11 @@ function(
     },
 
     onDeckClick: function (event) {
+      Board.drag.reset();
+      
       var $el = $(event.target);
-      var deckView = $el.backboneView(Deck.Views.Layout);
-      if (deckView != null) {
-        var deck = deckView.model;
+      var deck = Board.getDeck($el);
+      if (deck != null) {
         var openDeck = this.model.openDeck;
         
         if (deck == this.model.mainDeck) {
@@ -390,6 +517,142 @@ function(
             openDeck.offerCards(openDeck.cards.length, deck.get("id"), false);
           }
         }
+      }
+      
+      Board.drag.reset();
+    },
+
+    onTouchBoard: function(event) {
+      Board.drag.reset();
+    },
+    
+    // NOTE KI NOT USED; only for debugging
+    onTouchStart: function(event) {
+      var $el = $(event.target);
+      
+      var card = Board.getCard($el);
+      var deck = Board.getDeck($el);
+      if (card != null) {
+        app.trigger("debug:data", {type: "touch-start", value: card.get("value")});
+      }
+    },
+
+    onTouchEnd: function(event) {
+      if (event.currentTarget !== event.target) {
+        return;
+      }
+      
+      var sourceDeck = Board.drag.deck;
+      var sourceCard = Board.drag.card;
+      
+      var $el = $(event.target);
+      var card = Board.getCard($el);
+      var deck = Board.getDeck($el);
+
+      if (sourceCard == null) {
+        if (Board.isMain(deck) && deck.cards.length == 0) {
+          // only "main" is valid in this case
+          this.onDeckClick(event);
+        } else {
+          if (card != null && card.get("front") && !Board.isMain(deck)) {
+            // start "drag"
+            Board.drag.start(event.target, 0, 0);
+          }
+        }
+      } else {
+        if (deck == null || Board.isMain(deck)) {
+          Board.drag.reset();
+        } else {
+          if (deck.get("id") != sourceDeck.get("id") && !Board.isOpen(deck)) {
+            Board.drag.reset();
+          
+            app.trigger(
+                "card:offer", {
+                    sourceDeckId: sourceDeck.get("id"),
+                    targetDeckId: deck.get("id"),
+                    cardIds: sourceDeck.cardIdsFrom(sourceCard),
+                    show: true});
+          } else if (deck.get("id") == sourceDeck.get("id")) {
+            Board.drag.reset();
+          }
+        }
+      }
+    },
+    
+    onTouchEnd_NOPE: function(event) {
+      var touches = event.originalEvent.touches;
+      var changedTouches = event.originalEvent.changedTouches;
+
+      app.trigger("debug:data", {
+        type: "touch-end1",
+        changed: changedTouches.length,
+        touches: touches.length});
+      
+      if (touches.length == 0 && changedTouches.length == 1) {
+        var touch = changedTouches[0];
+
+        app.trigger("debug:data", {
+          type: "touch-end",
+          pageX: touch.pageX,
+          pageY: touch.pageY});
+        
+        var $el = $(event.target);
+        var card = Board.getCard($el);
+        var deck = Board.getDeck($el);
+        if (cardView != null) {
+          this.onCardClick(event);
+        } else {
+          this.onDeckClick(event);
+        }
+      }
+      
+      Board.drag.reset();
+    },
+
+    onTouchMove: function(event) {
+      var touches = event.originalEvent.touches;
+      var changedTouches = event.originalEvent.changedTouches;
+      
+      if (touches.length == 1) {
+        var touch = touches[0];
+        var x = touch.clientX;
+        var y = touch.clientY;
+        
+        if (Board.drag.isEmpty()) {
+          var $el = $(event.target);
+        
+          var card = Board.getCard($el);
+          
+          if (card != null) {
+            Board.drag.start(event.target, x, y);
+          }
+        } else {
+          var targetX = event.target.style.left;
+          var targetY = event.target.style.top;
+          
+          Board.drag.moveTo(x, y);
+        }
+        
+        app.trigger("debug:data", {
+          type: "touch-move",
+          value: card != null ? card.get("value") : "n/a",
+          X: x,
+          Y: y,
+          targetX: targetX,
+          targetY: targetY});
+      } else if (touches.length == 0) {
+        var $el = $(event.target);
+        var card = Board.getCard($el);
+        var deck = Board.getDeck($el);
+        
+        app.trigger("debug:data", {
+          type: "touch-move-done",
+          value: cardView != null ? card.get("value") : "n/a",
+          deckId: deckView != null ? deck.get("id") : "n/a",
+          X: x,
+          Y: y});
+        
+        Board.drag.reset();
       }
     },
     

@@ -32,6 +32,14 @@
 <script >
 var ua = navigator.userAgent
 window.IE= ua.match(/(msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+
+function isTouchDevice() {  
+  return !!('ontouchstart' in window) // works on most browsers 
+    || !!('onmsgesturechange' in window); // works on ie10
+}
+
+window.MOBILE = isTouchDevice();
+
 </script>
 
   <!--(if target dummy)><!-->

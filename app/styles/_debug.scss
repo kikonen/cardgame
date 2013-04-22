@@ -1,0 +1,9 @@
+#debug {
+    @include round-border(10px, 1px, solid, gray);
+
+    background: yellow;
+    left: 10px;
+    width: $boardWidth + 10px;
+    height: 200px;
+    margin: 10px;
+}

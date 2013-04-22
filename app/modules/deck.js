@@ -104,6 +104,16 @@ function(
       
       return result;
     },
+
+    /**
+     * Get all cardIds starting from card
+     */
+    cardIdsFrom: function(fromCard) {
+      return _.map(
+          this.cardsFrom(fromCard),
+          function(card) {
+              return card.get("id"); });
+    },
     
     /**
      * Get all cards matching cardIds
