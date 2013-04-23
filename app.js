@@ -4,7 +4,7 @@ var express = require('express'),
 
 var app = express();
 
-var rootURL = "";
+var rootURL = "/cardgame/api";
 
 app.configure(function() {
   app.use(express.bodyParser());

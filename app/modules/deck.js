@@ -82,7 +82,7 @@ function(
     },
     
     shuffle: function() {
-      this.cards.url = (app.root.length > 1 ? app.root : "") + "/shuffledcards";
+      this.cards.url = app.apiRoot + "shuffledcards";
       this.cards.fetch();
     },
     
