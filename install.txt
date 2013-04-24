@@ -1,2 +1,0 @@
-For compass:
-https://github.com/backbone-boilerplate/grunt-bbb/issues/60
