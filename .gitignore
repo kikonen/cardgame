@@ -9,3 +9,4 @@ app/dev/*
 app/prod/*
 dist/*
 nohup.out
+vendor/jam/*
