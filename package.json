@@ -15,6 +15,9 @@
     "grunt": "~0.4.1",
     "grunt-contrib-cssmin": "~0.6.0",
     "grunt-contrib-compass": "~0.2.0",
-    "grunt-contrib": "~0.6.1"
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-requirejs": "~0.4.0",
+    "grunt-contrib-concat": "~0.2.0"
   }
 }

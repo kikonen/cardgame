@@ -1,66 +1,20 @@
-// This is the main application configuration file.  It is a Grunt
-// configuration file, which you can learn more about here:
-// https://github.com/cowboy/grunt/blob/master/docs/configuring.md
+// @see https://github.com/cowboy/grunt/blob/master/docs/configuring.md
 module.exports = function(grunt) {
 
   grunt.initConfig({
-
-    // The lint task will run the build configuration and the application
-    // JavaScript through JSHint and report any errors.  You can change the
-    // options for this task, by reading this:
-    // https://github.com/cowboy/grunt/blob/master/docs/task_lint.md
-    lint: {
-      files: [
-        "app/config.js", "app/**/*.js"
-      ]
-    },
-
-    // The jshint option for scripturl is set to lax, because the anchor
-    // override inside main.js needs to test for them so as to not accidentally
-    // route.
+    // @see https://github.com/millermedeiros/amd-utils/blob/master/.jshintrc#L18-22
+    // @see .jshintrc
     jshint: {
       options: {
-        scripturl: true
-      }
+        jshintrc: '.jshintrc'
+      },
+
+      all: [
+        '*.js',
+        'app/**/*.js',
+        'server/**/*.js']
     },
 
-    // The jst task compiles all application templates into JavaScript
-    // functions with the underscore.js template function from 1.2.4.  You can
-    // change the namespace and the template options, by reading this:
-    // https://github.com/gruntjs/grunt-contrib/blob/master/docs/jst.md
-    //
-    // The concat task depends on this file to exist, so if you decide to
-    // remove this, ensure concat is updated accordingly.
-    jst: {
-      "dist/debug/templates.js": [
-        "app/templates/**/*.html"
-      ]
-    },
-
-    // This task simplifies working with CSS inside Backbone Boilerplate
-    // projects.  Instead of manually specifying your stylesheets inside the
-    // configuration, you can use `@imports` and this task will concatenate
-    // only those paths.
-    styles: {
-      // Out the concatenated contents of the following styles into the below
-      // development file path.
-      "dist/debug/index.css": {
-        // Point this to where your `index.css` file is location.
-        src: "app/styles/index.css",
-
-        // The relative path to use for the @imports.
-        paths: ["app/styles"],
-
-        // Point to where styles live.
-        prefix: "app/styles/",
-
-        // Additional production-only stylesheets here.
-        additional: []
-      }
-    },
-
-    // This task uses James Burke's excellent r.js AMD build tool.  In the
-    // future other builders may be contributed as drop-in alternatives.
     requirejs: {
       compile: {
         options: {
@@ -70,7 +24,7 @@ module.exports = function(grunt) {
           mainConfigFile: "app/config.js",
           include: ["vendor/jam/require.config"],
           out: "dist/debug/require.js",
-    
+
           // Do not wrap everything in an IIFE.
           wrap: false
         }
@@ -129,7 +83,7 @@ module.exports = function(grunt) {
     //  until documentation has been written.
     server: {
       port: 8080,
-      
+
       // Ensure the favicon is mapped correctly.
       files: { "favicon.ico": "favicon.ico" },
 
@@ -176,9 +130,9 @@ module.exports = function(grunt) {
       all: ["test/jasmine/*.html"]
     },
 
-    compass: {                  // Task
-      prod: {                   // Target
-        options: {              // Target options
+    compass: {
+      prod: {
+        options: {
           sassDir: 'app/styles',
           cssDir: 'app/release',
           environment: 'production',
@@ -188,7 +142,7 @@ module.exports = function(grunt) {
           httpGeneratedImagesPath: 'images'
         }
       },
-      dev: {                    // Another target
+      dev: {
         options: {
           sassDir: 'app/styles',
           cssDir: 'app/dev',
@@ -199,7 +153,7 @@ module.exports = function(grunt) {
         }
       }
     },
-  
+
     // The watch task can be used to monitor the filesystem and execute
     // specific tasks when files are modified.  By default, the watch task is
     // available to compile CSS if you are unable to use the runtime compiler
@@ -211,7 +165,7 @@ module.exports = function(grunt) {
 
     // The clean task ensures all files are removed from the dist/ directory so
     // that no files linger from previous builds.
-    clean: ["dist/"],
+    clean: ["dist/", "app/dev", "app/prod"]
 
     // If you want to generate targeted `index.html` builds into the `dist/`
     // folders, uncomment the following configuration block and use the
@@ -227,7 +181,7 @@ module.exports = function(grunt) {
     //    dest: "dist/release/index.html"
     //  }
     //},
-    
+
     // This task will copy assets into your build directory,
     // automatically.  This makes an entirely encapsulated build into
     // each directory.
@@ -249,22 +203,26 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-compass');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
- 
+  grunt.loadNpmTasks('grunt-contrib-compass');
+
   // The debug task will remove all contents inside the dist/ folder, lint
   // all your code, precompile all the underscore templates into
   // dist/debug/templates.js, compile all the application code into
   // dist/debug/require.js, and then concatenate the require/define shim
   // almond.js and dist/debug/templates.js into the require.js file.
 //  grunt.registerTask("debug", "clean lint jst requirejs concat compass:dev");
-  grunt.registerTask("debug", ["clean", "jst", "requirejs", "concat", "compass:dev"]);
+  grunt.registerTask("debug", ["clean", "jshint", "requirejs", "concat", "compass:dev"]);
 
   // The release task will run the debug tasks and then minify the
   // dist/debug/require.js file and CSS files.
   grunt.registerTask("release", ["debug", "min", "compass:prod", "mincss"]);
 
   grunt.registerTask("releasedev", ["debug", "min", "compass:dev"]);
- 
-  grunt.registerTask("run", ["server", "watch"])
+
+  grunt.registerTask("run", ["server", "watch"]);
 };

@@ -12,7 +12,7 @@ function(app) {
 
   // Default Model.
   Header.Model = Backbone.Model.extend({
-  
+
   });
 
   // Default Collection.
@@ -23,16 +23,16 @@ function(app) {
   // Default View.
   Header.Views.Layout = Backbone.Layout.extend({
     template: "header",
-    
+
     events: {
       "click #restart": "onRestart",
       "click #tip": "onTip"
     },
-    
+
     onRestart: function() {
       app.trigger("game:restart");
     },
-    
+
     onTip: function() {
       app.trigger("game:tip");
     }

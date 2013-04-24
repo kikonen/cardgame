@@ -67,7 +67,8 @@ define([
       }, options));
 
       // Cache the refererence.
-      return this.layout = layout;
+      this.layout = layout;
+      return layout;
     }
   }, Backbone.Events);
 

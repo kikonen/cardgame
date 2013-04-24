@@ -12,7 +12,7 @@ function(app) {
 
   // Default Model.
   Footer.Model = Backbone.Model.extend({
-  
+
   });
 
   // Default Collection.

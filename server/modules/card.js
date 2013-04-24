@@ -14,7 +14,7 @@ function(
       front: true
     }
   });
-  
+
   Card.Collection = Backbone.Collection.extend({
     model: Card.Model
   });

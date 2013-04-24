@@ -13,11 +13,11 @@ define([
   var backboneSetElementOriginal = Backbone.View.prototype.setElement;
 
   Backbone.View.prototype.setElement = function(element) {
-    if (this.el != element) {
-      $(this.el).backboneView('unlink');                    
+    if (this.el !== element) {
+      $(this.el).backboneView('unlink');
     }
 
-    $(element).backboneView(this);    
+    $(element).backboneView(this);
 
     return backboneSetElementOriginal.apply(this, arguments);
   };
@@ -26,7 +26,7 @@ define([
   // This avoids a dependency on a data selector plugin...
 
   $.expr[':'].backboneView = function(element, intStackIndex, arrProperties, arrNodeStack) {
-    return $(element).data('backboneView') !== undefined;        
+    return $(element).data('backboneView') !== undefined;
   };
 
   // Plugin internal functions:
@@ -49,16 +49,16 @@ define([
       }
       else {
         $el = $el.parent();
-      }           
+      }
     }
 
-    return ret;                
+    return ret;
   };
 
   // Extra methods:
   var methods = {
     unlink: function($el) {
-      $el.removeData('backboneView');        
+      $el.removeData('backboneView');
     }
   };
 
@@ -68,15 +68,15 @@ define([
     var args = Array.prototype.slice.call(arguments, 0);
 
     if ($.isFunction(methods[args[0]])) {
-      methods[args[0]](this);                        
+      methods[args[0]](this);
     }
     else if (args[0] && args[0] instanceof Backbone.View) {
-      registerViewToElement(this.first(), args[0]);                
+      registerViewToElement(this.first(), args[0]);
     }
     else {
       ret = getClosestViewFromElement(this.first(), args[0]);
     }
 
-    return ret;        
-  }
+    return ret;
+  };
 });

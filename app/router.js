@@ -1,7 +1,7 @@
 define([
   // Application.
   "app",
-  "modules/game",
+  "modules/game"
 ],
 
 function(app, Game) {

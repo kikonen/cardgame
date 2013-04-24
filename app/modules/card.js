@@ -5,10 +5,10 @@ define([
 ],
 function(app) {
   var Card = app.module();
-  
+
   Card.VALUE_ACE = 1;
   Card.VALUE_KING = 13;
-  
+
   Card.LEFT = 5;
   Card.TOP = 5;
   Card.WIDTH = 72 + 1 * 2;
@@ -23,15 +23,15 @@ function(app) {
     value: 0,
     index: 0,
     front: true,
-    
+
     isAlternateColor: function(card) {
       var a = this.get("suite");
       var b = card.get("suite");
-      
-      if (a == 'spade' || a == 'club') {
-        return b == 'heart' || b == 'diamond';
+
+      if (a === 'spade' || a === 'club') {
+        return b === 'heart' || b === 'diamond';
       } else {
-        return b == 'spade' || b == 'club';
+        return b === 'spade' || b === 'club';
       }
     }
   });
@@ -47,17 +47,17 @@ function(app) {
     attributes: {
       draggable: true
     },
-    
+
     beforeRender: function() {
       var id = this.model.get('id');
       var idx = this.model.get('index');
       this.$el.attr("data-card-id", id);
       this.$el.addClass("card-" + id);
-      
+
       if (this.stackHorizontal) {
         this.$el.css("left", Card.LEFT + (this.stackIndex * Card.OVERLAP_H) + "px");
       }
-      
+
       if (this.stackVertical) {
         this.$el.css("top", Card.TOP + (this.stackIndex * Card.OVERLAP_V) + "px");
       }
@@ -68,12 +68,12 @@ function(app) {
     template: "cardback",
     tagName: "div",
     className: "card cardback bluedeck",
-    
+
     beforeRender: function() {
       if (this.stackHorizontal) {
         this.$el.css("left", Card.LEFT + (this.stackIndex * Card.OVERLAP_H) + "px");
       }
-      
+
       if (this.stackVertical) {
         this.$el.css("top", Card.TOP + (this.stackIndex * Card.OVERLAP_V ) + "px");
       }
