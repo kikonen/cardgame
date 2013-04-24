@@ -9,7 +9,7 @@ function(
   Card) {
 
   var Deck = app.module();
-
+  
   Deck.Model = Backbone.Model.extend({
     stackHorizontal: false,
     stackVertical: false,
@@ -80,10 +80,26 @@ function(
     acceptMove: function(event) {
       return false;
     },
-    
+
+    /**
+     * start shuffle only if there ain't shuffle already in progress
+     */
     shuffle: function() {
-      this.cards.url = app.apiRoot + "shuffledcards";
-      this.cards.fetch();
+      var cards = this.cards;
+      if (cards.url == null) {
+        cards.url = app.apiRoot + "cards?order=shuffle";
+        cards.fetch({
+            reset: true,
+            success: function(collection, response, options) {
+              cards.url = null;
+            },
+            error: function(collection, response, options) {
+              cards.url = null;
+            }
+          });
+      } else {
+        console.log("ignore shuffle");
+      }
     },
     
     /**
@@ -151,7 +167,7 @@ function(
               return card.get("id"); });
       
       cardIds.reverse();
-      
+
       app.trigger(
           "card:offer", {
               sourceDeckId: this.get("id"),
@@ -188,23 +204,17 @@ function(
       this.model.cards.on("change", this.render, this);
       this.model.cards.on("add", this.render, this);
       this.model.cards.on("remove", this.render, this);
-      this.model.cards.on("reset", this.reset, this);
+      this.model.cards.on("reset", this.onReset, this);
     },
 
-    reset: function() {
+    onReset: function() {
       this.model.cards.url = null;
-      if (false) {
-      this.model.cards.each(function(card) {
-          if (Math.random() > 0.5) {
-            card.set("front", true);
-          }
-        },
-        this);
+      if (this.model.length == 0) {
+        app.trigger("deck:empty", {deck: this.model});
+      } else {
+        app.trigger("deck:ready", {deck: this.model});
       }
-      
       this.render();
-      
-      app.trigger("deck:ready", {deck: this.model});
     },
 
     beforeRender: function() {

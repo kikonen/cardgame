@@ -17,7 +17,7 @@ function(app) {
   Card.OVERLAP_V = Math.round(Card.HEIGHT / 5);
 
   Card.Model = Backbone.Model.extend({
-    urlRoot: app.apiRoot + 'cards',
+    urlRoot: null,
     id: '',
     suite: '',
     value: 0,

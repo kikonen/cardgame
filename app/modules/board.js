@@ -1,12 +1,8 @@
-// Board module
 define([
-  // Application.
   "app",
   "modules/card",
   "modules/deck"
 ],
-
-// Map dependencies from above array.
 function(
   app,
   Card,
@@ -50,9 +46,6 @@ function(
       "touchend .deck": "onTouchEnd",
       "touchend .cardfront": "onTouchEnd",
       "touchend #board": "onTouchBoard",
-    
-//      "touchstart .cardfront": "onTouchStart",
-//      "touchmove": "onTouchMove",
     };
 
   /**
@@ -97,9 +90,11 @@ function(
     start: function(orig, x, y) {
       this.orig = orig;
       this.$orig = $(this.orig);
-      
+
+      // NOTE KI experimented "touchmove"
+      // => check to utilize this instead of DnD in desktop
       if (false) {
-      this.parent = window.document.documentElement;//orig.parentNode;
+      this.parent = window.document.documentElement;
       this.clone = orig.cloneNode(true);
 
       this.$clone = $(this.clone);
@@ -111,7 +106,7 @@ function(
       var origTop = pos.top;
       this.offsetX = origLeft - x;
       this.offsetY = origTop - y;
-      moveTo(x, y);
+      this.moveTo(x, y);
       
       this.parent.appendChild(this.clone);
       }
@@ -526,17 +521,6 @@ function(
       Board.drag.reset();
     },
     
-    // NOTE KI NOT USED; only for debugging
-    onTouchStart: function(event) {
-      var $el = $(event.target);
-      
-      var card = Board.getCard($el);
-      var deck = Board.getDeck($el);
-      if (card != null) {
-        app.trigger("debug:data", {type: "touch-start", value: card.get("value")});
-      }
-    },
-
     onTouchEnd: function(event) {
       if (event.currentTarget !== event.target) {
         return;
@@ -576,83 +560,6 @@ function(
             Board.drag.reset();
           }
         }
-      }
-    },
-    
-    onTouchEnd_NOPE: function(event) {
-      var touches = event.originalEvent.touches;
-      var changedTouches = event.originalEvent.changedTouches;
-
-      app.trigger("debug:data", {
-        type: "touch-end1",
-        changed: changedTouches.length,
-        touches: touches.length});
-      
-      if (touches.length == 0 && changedTouches.length == 1) {
-        var touch = changedTouches[0];
-
-        app.trigger("debug:data", {
-          type: "touch-end",
-          pageX: touch.pageX,
-          pageY: touch.pageY});
-        
-        var $el = $(event.target);
-        var card = Board.getCard($el);
-        var deck = Board.getDeck($el);
-        if (cardView != null) {
-          this.onCardClick(event);
-        } else {
-          this.onDeckClick(event);
-        }
-      }
-      
-      Board.drag.reset();
-    },
-
-    onTouchMove: function(event) {
-      var touches = event.originalEvent.touches;
-      var changedTouches = event.originalEvent.changedTouches;
-      
-      if (touches.length == 1) {
-        var touch = touches[0];
-        var x = touch.clientX;
-        var y = touch.clientY;
-        
-        if (Board.drag.isEmpty()) {
-          var $el = $(event.target);
-        
-          var card = Board.getCard($el);
-          
-          if (card != null) {
-            Board.drag.start(event.target, x, y);
-          }
-        } else {
-          var targetX = event.target.style.left;
-          var targetY = event.target.style.top;
-          
-          Board.drag.moveTo(x, y);
-        }
-        
-        app.trigger("debug:data", {
-          type: "touch-move",
-          value: card != null ? card.get("value") : "n/a",
-          X: x,
-          Y: y,
-          targetX: targetX,
-          targetY: targetY});
-      } else if (touches.length == 0) {
-        var $el = $(event.target);
-        var card = Board.getCard($el);
-        var deck = Board.getDeck($el);
-        
-        app.trigger("debug:data", {
-          type: "touch-move-done",
-          value: cardView != null ? card.get("value") : "n/a",
-          deckId: deckView != null ? deck.get("id") : "n/a",
-          X: x,
-          Y: y});
-        
-        Board.drag.reset();
       }
     },
     
