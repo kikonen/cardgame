@@ -180,20 +180,22 @@ module.exports = function(grunt) {
       prod: {                   // Target
         options: {              // Target options
           sassDir: 'app/styles',
-          cssDir: 'app/release/css',
+          cssDir: 'app/release',
           environment: 'production',
           httpPath: '',
+          generatedImagesDir: 'app/prod/images',
           httpImagesPath: '../../images',
-          httpGeneratedImagesPath: '../../images'
+          httpGeneratedImagesPath: 'images'
         }
       },
       dev: {                    // Another target
         options: {
           sassDir: 'app/styles',
-          cssDir: 'app/debug_css',
+          cssDir: 'app/dev',
           httpPath: '',
+          generatedImagesDir: 'app/dev/images',
           httpImagesPath: '../../images',
-          httpGeneratedImagesPath: '../../images'
+          httpGeneratedImagesPath: 'images'
         }
       }
     },

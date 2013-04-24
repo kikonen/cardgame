@@ -5,7 +5,6 @@ node_modules/*
 ~*
 #*
 *#
-app/debug_css/*
+app/dev/*
+app/prod/*
 dist/*
-images/card-*.png
-images/back-*.png
