@@ -13,7 +13,7 @@ function (
 
   var app = express();
 
-  app.APP_ROOT = '/cardgame/';
+  app.APP_ROOT = '/';
   app.DIR = path.dirname(module.uri);
 
   app.port = 8090;
@@ -23,7 +23,8 @@ function (
     app.use(express.bodyParser());
     app.use(express.static(path.join(app.DIR, '.')));
     app.set('view engine', 'jade');
-    app.set('views', path.join(app.DIR, 'app'));
+//    app.set('views', path.join(app.DIR, 'app'));
+    app.set('views', app.DIR);
   });
 
   app.get(app.APP_ROOT, function(req, res) {

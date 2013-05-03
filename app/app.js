@@ -6,7 +6,7 @@ define([
   var app = {
     // The root path to run the application.
     root: "/",
-    apiRoot: "/cardgame/api/"
+    apiRoot: "/api/"
   };
 
   // Localize or create a new JavaScript Template object.
