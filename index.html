@@ -8,11 +8,11 @@
   <title>Klondike</title>
 
   <!--(if target release)>
-  <link rel="stylesheet" href="app/prod/index.css">
+  <link rel="stylesheet" href="app/release/index.css">
   <!(endif)-->
 
   <!--(if target debug)><!-->
-  <link rel="stylesheet" href="app/dev/index.css">
+  <link rel="stylesheet" href="app/debug/index.css">
   <!(endif)-->
 </head>
 
@@ -27,8 +27,8 @@
 var ua = navigator.userAgent
 window.IE= ua.match(/(msie)\/?\s*(\.?\d+(\.\d+)*)/i);
 
-function isTouchDevice() {  
-  return !!('ontouchstart' in window) // works on most browsers 
+function isTouchDevice() {
+  return !!('ontouchstart' in window) // works on most browsers
     || !!('onmsgesturechange' in window); // works on ie10
 }
 
@@ -37,7 +37,7 @@ window.MOBILE = isTouchDevice();
 </script>
 
   <!--(if target dummy)><!-->
-  <script data-main="app/config" src="vendor/js/libs/require.js"></script>
+  <script data-main="app/config" src="components/requirejs/require.js"></script>
   <!--<!(endif)-->
 
   <!--(if target release)>

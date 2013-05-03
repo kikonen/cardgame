@@ -5,8 +5,9 @@ node_modules/*
 ~*
 #*
 *#
-app/dev/*
-app/prod/*
+*.log
+app/debug/*
+app/release/*
 components/*
 dist/*
 nohup.out

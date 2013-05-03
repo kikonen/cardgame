@@ -1,7 +1,8 @@
 echo "Fetching dependencies"
 
 npm install -l
-jam upgrade
+bower install
+bower update
 
 echo "RUN: update gems"
 echo sudo gem update

@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "requirejs": "~2.1.5",
+    "requirejs-text": "~2.0.6",
+    "requirejs-plugins": "~1.0.0",
+    "almond": "~0.2.5",
+    "jquery": "~2.0.0",
+    "underscore": "~1.4.4",
+    "backbone": "~1.0.0",
+    "layoutmanager": "~0.8.7"
+  }
+}

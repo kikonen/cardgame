@@ -16,54 +16,30 @@ module.exports = function(grunt) {
     },
 
     requirejs: {
-      compile: {
+      debug: {
         options: {
           // Root application module.
           name: "config",
           baseUrl : "app",
           mainConfigFile: "app/config.js",
-          include: ["vendor/jam/require.config"],
-          out: "dist/debug/require.js",
+          out: "dist/debug/main.js",
+
+          // Do not wrap everything in an IIFE.
+          wrap: false
+        }
+      },
+      release: {
+        options: {
+          // Root application module.
+          name: "config",
+          baseUrl : "app",
+          mainConfigFile: "app/config.js",
+          out: "dist/release/main.js",
 
           // Do not wrap everything in an IIFE.
           wrap: false
         }
       }
-    },
-
-    // The concatenate task is used here to merge the almond require/define
-    // shim and the templates into the application code.  It's named
-    // dist/debug/require.js, because we want to only load one script file in
-    // index.html.
-    concat: {
-      dist: {
-        src: [
-          "vendor/js/libs/almond.js",
-          "dist/debug/templates.js",
-          "dist/debug/require.js"
-        ],
-
-        dest: "dist/debug/require.js",
-
-        separator: ";"
-      }
-    },
-
-    // This task uses the MinCSS Node.js project to take all your CSS files in
-    // order and concatenate them into a single CSS file named index.css.  It
-    // also minifies all the CSS as well.  This is named index.css, because we
-    // only want to load one stylesheet in index.html.
-    mincss: {
-      "dist/release/index.css": [
-        "dist/debug/index.css"
-      ]
-    },
-
-    // Takes the built require.js file and minifies it for filesize benefits.
-    min: {
-      "dist/release/require.js": [
-        "dist/debug/require.js"
-      ]
     },
 
     // Running the server without specifying an action will run the defaults,
@@ -131,23 +107,23 @@ module.exports = function(grunt) {
     },
 
     compass: {
-      prod: {
+      release: {
         options: {
           sassDir: 'app/styles',
           cssDir: 'app/release',
           environment: 'production',
           httpPath: '',
-          generatedImagesDir: 'app/prod/images',
+          generatedImagesDir: 'app/release/images',
           httpImagesPath: '../../images',
           httpGeneratedImagesPath: 'images'
         }
       },
-      dev: {
+      debug: {
         options: {
           sassDir: 'app/styles',
-          cssDir: 'app/dev',
+          cssDir: 'app/debug',
           httpPath: '',
-          generatedImagesDir: 'app/dev/images',
+          generatedImagesDir: 'app/debug/images',
           httpImagesPath: '../../images',
           httpGeneratedImagesPath: 'images'
         }
@@ -160,12 +136,12 @@ module.exports = function(grunt) {
     // (use if you have a custom server, PhoneGap, Adobe Air, etc.)
     watch: {
       files: ["grunt.js", "vendor/**/*", "app/**/*"],
-      tasks: ['compass:dev', 'compass:prod']
+      tasks: ['compass:debug', 'compass:release']
     },
 
     // The clean task ensures all files are removed from the dist/ directory so
     // that no files linger from previous builds.
-    clean: ["dist/", "app/dev", "app/prod"]
+    clean: ["dist", "app/release", "app/debug"]
 
     // If you want to generate targeted `index.html` builds into the `dist/`
     // folders, uncomment the following configuration block and use the
@@ -205,24 +181,13 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-compass');
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-jsbeautifier');
 
-  // The debug task will remove all contents inside the dist/ folder, lint
-  // all your code, precompile all the underscore templates into
-  // dist/debug/templates.js, compile all the application code into
-  // dist/debug/require.js, and then concatenate the require/define shim
-  // almond.js and dist/debug/templates.js into the require.js file.
-//  grunt.registerTask("debug", "clean lint jst requirejs concat compass:dev");
-  grunt.registerTask("debug", ["clean", "jshint", "requirejs", "concat", "compass:dev"]);
-
-  // The release task will run the debug tasks and then minify the
-  // dist/debug/require.js file and CSS files.
-  grunt.registerTask("release", ["debug", "min", "compass:prod", "mincss"]);
-
-  grunt.registerTask("releasedev", ["debug", "min", "compass:dev"]);
+  grunt.registerTask("debug", ["clean", "jshint", "requirejs:debug", "compass:debug"]);
+  grunt.registerTask("release", ["debug", "requirejs:release", "compass:release"]);
 
   grunt.registerTask("run", ["server", "watch"]);
 };

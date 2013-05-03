@@ -3,16 +3,31 @@ require.config({
   // Initialize the application with the main application file and the JamJS
   // generated configuration file.
   deps: [
-        "../vendor/jam/require.config",
-        "backbone_data",
-        "main"],
+    "backbone_data",
+    "main"],
 
   paths: {
-    // Put paths here.
+    "jquery": "../components/jquery/jquery.min",
+    "backbone": "../components/backbone/backbone-min",
+    "backbone.layoutmanager": "../components/layoutmanager/backbone.layoutmanager",
+    "underscore": "../components/underscore/underscore-min"
   },
 
   shim: {
-    // Put shims here.
+    'underscore': {
+        exports: '_'
+    },
+    'jquery': {
+      exports: '$'
+    },
+    'backbone': {
+      deps: ['underscore', 'jquery'],
+      exports: 'Backbone'
+    },
+    'backbone.layoutmanager': {
+      deps: ['backbone'],
+      exports: 'Backbone.LayoutManager'
+    }
   }
 
 });
