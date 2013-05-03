@@ -18,6 +18,8 @@ function (
 
   app.port = 8090;
   app.deck = new Deck.Model();
+  app.dev = false;
+  app.release = true;
 
   app.configure(function() {
     app.use(express.bodyParser());
@@ -28,7 +30,9 @@ function (
   });
 
   app.get(app.APP_ROOT, function(req, res) {
-    res.render('index.jade');
+    res.render('index.jade', {
+        release: app.release,
+        dev: app.dev});
   });
 
   return app;
