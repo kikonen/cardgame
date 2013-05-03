@@ -15,7 +15,8 @@ Simple experiment of few web technologies
 - REST
 - HTML5 DnD
 - Modular web application design
-
+- bower
+- jade
 
 Demo:
 
