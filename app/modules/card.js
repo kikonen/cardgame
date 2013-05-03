@@ -51,8 +51,7 @@ function(app) {
     beforeRender: function() {
       var id = this.model.get('id');
       var idx = this.model.get('index');
-      this.$el.attr("data-card-id", id);
-      this.$el.addClass("card-" + id);
+      this.$el.addClass("card-card_" + id);
 
       if (this.stackHorizontal) {
         this.$el.css("left", Card.LEFT + (this.stackIndex * Card.OVERLAP_H) + "px");
