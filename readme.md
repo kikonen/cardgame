@@ -20,6 +20,6 @@ Simple experiment of few web technologies
 
 Demo:
 
-http://kari.dy.fi/cardgame/
+http://cardgame.ikari.fi
 
 (sorry: not quaranteed to be running all the time)
