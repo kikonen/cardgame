@@ -8,6 +8,7 @@ function (
   var API = {};
 
   API.ROOT = app.APP_ROOT + "api/";
+  console.log(API.ROOT);
 
   app.get(API.ROOT + 'cards', function(req, res) {
     var cards = [];

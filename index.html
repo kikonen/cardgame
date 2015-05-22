@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Klondike</title>
+    <link rel="stylesheet" href="app/release/index.css">
+    <base href="/">
+  </head>
+  <body>
+    <main id="main" role="main"></main>
+    <script type="text/javascript">
+      var ua = navigator.userAgent
+      window.IE= ua.match(/(msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+
+      function isTouchDevice() {
+        return !!('ontouchstart' in window) // works on most browsers
+          || !!('onmsgesturechange' in window); // works on ie10
+      }
+
+      window.MOBILE = isTouchDevice();
+
+    </script>
+    <script data-main="dist/release/main" src="components/requirejs/require.js"></script>
+  </body>
+</html>
