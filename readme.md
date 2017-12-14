@@ -17,9 +17,3 @@ Simple experiment of few web technologies
 - Modular web application design
 - bower
 - jade
-
-Demo:
-
-http://cardgame.ikari.fi
-
-(sorry: not quaranteed to be running all the time)
